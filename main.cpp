@@ -1,14 +1,14 @@
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
+# ifndef WIN32_LEAN_AND_MEAN
+# define WIN32_LEAN_AND_MEAN
+# endif
 // Library Includes
-#include <iostream>
+# include <iostream>
 // Winsock Includes
-#include <windows.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#include <iphlpapi.h>
-#include <stdio.h>
+# include <windows.h>
+# include <winsock2.h>
+# include <ws2tcpip.h>
+# include <iphlpapi.h>
+# include <stdio.h>
 
 # pragma comment(lib, "Ws2_32.lib")
 
@@ -48,6 +48,19 @@ int main(int argc, char* argv[]) {
 	 * 		type - The type specification (TCP or UDP)
 	 * 		protocol - Protocol specification to be used (IPPROTO_TCP) for TCP
 	 */
+	SOCKET serverSocket = INVALID_SOCKET;
+	// AF_INET for UDP or TCP
+	// SOCK_STREAM for TCP
+	// IPPROTO_TCP for TCP
+	serverSocket = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+
+	if (serverSocket==INVALID_SOCKET) {
+		std::cout << "Error at socket():" << WSAGetLastError() << std::endl;
+		WSACleanup();
+	}
+	else {
+		std::cout << "Socket() is OK!" << std::endl;
+	}
 
 
 	return 0;
