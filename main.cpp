@@ -83,10 +83,32 @@ int main(int argc, char* argv[]) {
 	    std::cout << "bind() failed: " << WSAGetLastError() << std::endl;
 	    closesocket(serverSocket);
 	    WSACleanup();
+
 	    return 1; // Exit if binding fails
-	} else {
+	}
+	else {
 	    std::cout << "bind() is OK!" << std::endl;
 	}
+	/* STEP 4:
+	 * Step 4 is the listenting stage. In this step we must place the server socket in a state where it listens
+	 * for incoming connections.
+	 *
+	 * Arguments:
+	 * 		s: Descriptor identifyinf a bound, unconnected socket.
+	 * 		backlog: The maximum number of connections allowed (also OS dependant).
+	 *
+	 * If no errors occur, return 0. Otherwise, it returns SOCKET_ERROR
+	 */
+	if (listen(serverSocket, 1) == SOCKET_ERROR) {
+		std::cout << "Listen(): Error listening on socket" << WSAGetLastError() << std::endl;
+	}
+	else {
+		std::cout << "Listening is sucessful" << std::endl;
+	}
+
+
+
+
 
 	return 0;
 }
