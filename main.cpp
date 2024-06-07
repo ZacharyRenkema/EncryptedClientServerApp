@@ -9,6 +9,7 @@
 # include <ws2tcpip.h>
 # include <iphlpapi.h>
 # include <stdio.h>
+// # include "stdafx.h"
 
 # pragma comment(lib, "Ws2_32.lib")
 
@@ -48,20 +49,44 @@ int main(int argc, char* argv[]) {
 	 * 		type - The type specification (TCP or UDP)
 	 * 		protocol - Protocol specification to be used (IPPROTO_TCP) for TCP
 	 */
-	SOCKET serverSocket = INVALID_SOCKET;
+	serverSocket = INVALID_SOCKET; // Do not redeclare
 	// AF_INET for UDP or TCP
 	// SOCK_STREAM for TCP
 	// IPPROTO_TCP for TCP
 	serverSocket = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 
-	if (serverSocket==INVALID_SOCKET) {
+	if (serverSocket == INVALID_SOCKET) {
 		std::cout << "Error at socket():" << WSAGetLastError() << std::endl;
 		WSACleanup();
 	}
 	else {
 		std::cout << "Socket() is OK!" << std::endl;
 	}
+	// When creating a socket remember to close the socket with "int closesocket(Socket s);"
+	/* STEP 3:
+	 * In step 3, after creating our socket we must bind the ip address and the port to the socket.
+	 * Refer to diagram in notes for visual description...
+	 *
+	 * Arguments:
+	 * 		s: Descriptor identitifying an unbound socket.
+	 * 		name: Address to assign to the socket from the sockaddr stucture
+	 * 		socklen: Length in bytes of the address structure.
+	 *
+	 * If no error occurs, bind() return 0. Otherwise, it returns SOCKET_ERROR
+	 */
+	sockaddr_in service;
+	service.sin_family = AF_INET;
+	inet_pton(AF_INET, "127.0.0.1", &service.sin_addr.s_addr);
+	service.sin_port = htons(port);
 
+	if (bind(serverSocket, (SOCKADDR*)&service, sizeof(service)) == SOCKET_ERROR) {
+	    std::cout << "bind() failed: " << WSAGetLastError() << std::endl;
+	    closesocket(serverSocket);
+	    WSACleanup();
+	    return 1; // Exit if binding fails
+	} else {
+	    std::cout << "bind() is OK!" << std::endl;
+	}
 
 	return 0;
 }
