@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
 	 * that the network-related code is loaded and linked at runtime rather than at compile
 	 * time.
 	 */
-	SOCKET serverSocket, acceptSocket;
+	SOCKET serverSocket;
 	WSADATA wsaData;
 	// Formats word into proper format to pass into WSAStartup()
 	WORD wVersionRequested = MAKEWORD(2,2); // Version of Winsock
@@ -38,6 +38,7 @@ int main(int argc, char* argv[]) {
 	}
 	else {
 		std::cout << "The Winsock dll is not found!" << std::endl;
+		return 0;
 	}
 	/* STEP 2:
 	 * In step 2 we refer to the protocol that will be used. Either UDP or TCP. In this
@@ -126,7 +127,6 @@ int main(int argc, char* argv[]) {
 		WSACleanup();
 		return -1;
 	}
-
 
 	return 0;
 }
