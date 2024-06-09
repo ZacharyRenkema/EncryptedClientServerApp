@@ -105,9 +105,27 @@ int main(int argc, char* argv[]) {
 	else {
 		std::cout << "Listening is sucessful" << std::endl;
 	}
+	/* STEP 4:
+	 * Accept. In this step we must call the accept function which listens for a connection from another client. With
+	 * this function it returns another function. Referring back to the visualization, this function actually makes a duplicate
+	 * of the existing socket passed into it.
+	 *
+	 * Arguments:
+	 * 		s: Descriptor that identifies a socket that has been placed in the listening state.
+	 * 		addr: Optional struicture containing the client address information
+	 * 		addrlen: Optional size of the address structure (if included)
+	 *
+	 * 	If no errors occur, the function returns a duplicate socket.
+	 */
+	SOCKET acceptSocket;
+	acceptSocket = accept(serverSocket, NULL, NULL);
 
-
-
+	if (acceptSocket == INVALID_SOCKET) {
+		std::cout << "Accept failed: " << WSAGetLastError() << std::endl;
+		// Cleanup to conserve resources
+		WSACleanup();
+		return -1;
+	}
 
 
 	return 0;
